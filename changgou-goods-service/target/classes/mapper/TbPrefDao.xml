@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhcc.dao.TbPrefDao">
+
+    <resultMap type="com.dhcc.entity.TbPref" id="TbPrefMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="cateId" column="cate_id" jdbcType="INTEGER"/>
+        <result property="buyMoney" column="buy_money" jdbcType="INTEGER"/>
+        <result property="preMoney" column="pre_money" jdbcType="INTEGER"/>
+        <result property="startTime" column="start_time" jdbcType="OTHER"/>
+        <result property="endTime" column="end_time" jdbcType="OTHER"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbPrefMap">
+        select
+          id, cate_id, buy_money, pre_money, start_time, end_time, type, state
+        from changgou.tb_pref
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbPrefMap">
+        select
+          id, cate_id, buy_money, pre_money, start_time, end_time, type, state
+        from changgou.tb_pref
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbPrefMap">
+        select
+          id, cate_id, buy_money, pre_money, start_time, end_time, type, state
+        from changgou.tb_pref
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="cateId != null">
+                and cate_id = #{cateId}
+            </if>
+            <if test="buyMoney != null">
+                and buy_money = #{buyMoney}
+            </if>
+            <if test="preMoney != null">
+                and pre_money = #{preMoney}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into changgou.tb_pref(cate_id, buy_money, pre_money, start_time, end_time, type, state)
+        values (#{cateId}, #{buyMoney}, #{preMoney}, #{startTime}, #{endTime}, #{type}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update changgou.tb_pref
+        <set>
+            <if test="cateId != null">
+                cate_id = #{cateId},
+            </if>
+            <if test="buyMoney != null">
+                buy_money = #{buyMoney},
+            </if>
+            <if test="preMoney != null">
+                pre_money = #{preMoney},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from changgou.tb_pref where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhcc.dao.TbCategoryBrandDao">
+
+    <resultMap type="com.dhcc.entity.TbCategoryBrand" id="TbCategoryBrandMap">
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        <result property="brandId" column="brand_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbCategoryBrandMap">
+        select
+          category_id, brand_id
+        from changgou.tb_category_brand
+        where category_id = #{categoryId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbCategoryBrandMap">
+        select
+          category_id, brand_id
+        from changgou.tb_category_brand
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbCategoryBrandMap">
+        select
+          category_id, brand_id
+        from changgou.tb_category_brand
+        <where>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="brandId != null">
+                and brand_id = #{brandId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="categoryId" useGeneratedKeys="true">
+        insert into changgou.tb_category_brand()
+        values ()
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update changgou.tb_category_brand
+        <set>
+        </set>
+        where category_id = #{categoryId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from changgou.tb_category_brand where category_id = #{categoryId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhcc.dao.TbAlbumDao">
+
+    <resultMap type="com.dhcc.entity.TbAlbum" id="TbAlbumMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="imageItems" column="image_items" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbAlbumMap">
+        select
+          id, title, image, image_items
+        from changgou.tb_album
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbAlbumMap">
+        select
+          id, title, image, image_items
+        from changgou.tb_album
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbAlbumMap">
+        select
+          id, title, image, image_items
+        from changgou.tb_album
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="image != null and image != ''">
+                and image = #{image}
+            </if>
+            <if test="imageItems != null and imageItems != ''">
+                and image_items = #{imageItems}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into changgou.tb_album(title, image, image_items)
+        values (#{title}, #{image}, #{imageItems})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update changgou.tb_album
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+            <if test="imageItems != null and imageItems != ''">
+                image_items = #{imageItems},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from changgou.tb_album where id = #{id}
+    </delete>
+
+</mapper>

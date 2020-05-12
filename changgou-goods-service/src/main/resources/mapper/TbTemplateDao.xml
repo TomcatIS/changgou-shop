@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhcc.dao.TbTemplateDao">
+
+    <resultMap type="com.dhcc.entity.TbTemplate" id="TbTemplateMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="specNum" column="spec_num" jdbcType="INTEGER"/>
+        <result property="paraNum" column="para_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TbTemplateMap">
+        select
+          id, name, spec_num, para_num
+        from changgou.tb_template
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TbTemplateMap">
+        select
+          id, name, spec_num, para_num
+        from changgou.tb_template
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TbTemplateMap">
+        select
+          id, name, spec_num, para_num
+        from changgou.tb_template
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="specNum != null">
+                and spec_num = #{specNum}
+            </if>
+            <if test="paraNum != null">
+                and para_num = #{paraNum}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into changgou.tb_template(name, spec_num, para_num)
+        values (#{name}, #{specNum}, #{paraNum})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update changgou.tb_template
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="specNum != null">
+                spec_num = #{specNum},
+            </if>
+            <if test="paraNum != null">
+                para_num = #{paraNum},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from changgou.tb_template where id = #{id}
+    </delete>
+
+</mapper>
