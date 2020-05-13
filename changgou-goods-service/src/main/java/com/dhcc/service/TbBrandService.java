@@ -12,6 +12,11 @@ import java.util.List;
 public interface TbBrandService {
 
     /**
+     * @description 根据分类id查询对应的品牌名称
+     */
+    List<String> listBrandsByCategoryId(Integer id);
+
+    /**
      * 通过ID查询单条数据
      *
      * @param id 主键

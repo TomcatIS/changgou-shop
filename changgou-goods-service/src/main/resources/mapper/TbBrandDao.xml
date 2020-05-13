@@ -10,6 +10,13 @@
         <result property="seq" column="seq" jdbcType="INTEGER"/>
     </resultMap>
 
+    <!--根据分类id查询对应的品牌名称-->
+    <select id="listBrandsByCategoryId" parameterType="integer" resultType="string">
+        select a.name
+        from tb_brand a inner join tb_category_brand b on a.id=b.brand_id
+        where b.category_id=#{id}
+    </select>
+
     <!--查询单个-->
     <select id="queryById" resultMap="TbBrandMap">
         select

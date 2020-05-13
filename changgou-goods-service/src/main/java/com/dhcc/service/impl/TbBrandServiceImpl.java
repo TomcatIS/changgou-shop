@@ -2,6 +2,7 @@ package com.dhcc.service.impl;
 
 import com.dhcc.entity.TbBrand;
 import com.dhcc.dao.TbBrandDao;
+import com.dhcc.exception.BaseException;
 import com.dhcc.service.TbBrandService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,18 @@ import java.util.List;
 public class TbBrandServiceImpl implements TbBrandService {
     @Resource
     private TbBrandDao tbBrandDao;
+
+    /**
+     * @description 根据分类id查询对应的品牌名称
+     */
+    @Override
+    public List<String> listBrandsByCategoryId(Integer id) {
+        List<String> brands = this.tbBrandDao.listBrandsByCategoryId(id);
+        if (brands == null) {
+            throw new BaseException("该分类无对应的品牌！");
+        }
+        return brands;
+    }
 
     /**
      * 通过ID查询单条数据

@@ -34,9 +34,7 @@ public class TbAlbumController {
      * @return 单条数据
      */
     @GetMapping("selectOne")
-    public CommonResult<TbAlbum> selectOne(@NotNull(message = "id不能为空") Long id) {
-        TbAlbum tbAlbum = this.tbAlbumService.queryById(id);
-        return CommonResult.success(tbAlbum);
+    public TbAlbum selectOne(@NotNull(message = "id不能为空") Long id) {
+        return this.tbAlbumService.queryById(id);
     }
-
 }

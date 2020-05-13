@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.csource.fastdfs.FileInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class FileController {
     @PostMapping("/upload")
     @ApiOperation(value = "文件上传")
     @ApiImplicitParam(name = "file", value = "文件", dataTypeClass = MultipartFile.class, required = true)
-    public CommonResult<Object> upload(@RequestBody MultipartFile file) {
+    public String[] upload(@RequestBody MultipartFile file) {
         try {
             if (file == null) {
                 throw new BaseException(ProcessStatusEnum.FILE_UPLOAD_IS_NULL.getCode(),
@@ -69,7 +70,7 @@ public class FileController {
             String filePath = uploadResults[1];
             // 将文件路径和原文件名存入redis
             redisTemplate.opsForValue().set(filePath, filename);
-            return CommonResult.success(uploadResults);
+            return uploadResults;
         } catch (IOException e) {
             throw new BaseException(ProcessStatusEnum.FILE_UPLOAD_ERROR.getCode(),
                     ProcessStatusEnum.FILE_UPLOAD_ERROR.getMessage());
@@ -87,10 +88,9 @@ public class FileController {
             @ApiImplicitParam(name = "groupName", value = "组名", dataTypeClass = String.class),
             @ApiImplicitParam(name = "fileName", value = "文件名", dataTypeClass = String.class)
     })
-    public CommonResult<Object> getFileInfo(@NotBlank(message = "文件所在组名不能为空") String groupName,
-                                            @NotBlank(message = "文件名不能为空") String fileName) {
-        String fileInfo = FastDfsUtil.getFileInfo(groupName, fileName);
-        return CommonResult.success(fileInfo);
+    public String getFileInfo(@NotBlank(message = "文件所在组名不能为空") String groupName,
+                                @NotBlank(message = "文件名不能为空") String fileName) {
+        return FastDfsUtil.getFileInfo(groupName, fileName);
     }
 
     /**
@@ -141,7 +141,7 @@ public class FileController {
             @ApiImplicitParam(name = "groupName", value = "组名", dataTypeClass = String.class),
             @ApiImplicitParam(name = "fileName", value = "文件名", dataTypeClass = String.class)
     })
-    public CommonResult<Object> delete(@NotBlank(message = "文件所在组名不能为空") String groupName,
+    public String delete(@NotBlank(message = "文件所在组名不能为空") String groupName,
                                        @NotBlank(message = "文件名不能为空") String fileName) {
         try {
             redisTemplate.delete(fileName);
@@ -151,6 +151,6 @@ public class FileController {
                     ProcessStatusEnum.FILE_DELETE_ERROR.getMessage());
         }
         FastDfsUtil.delete(groupName, fileName);
-        return CommonResult.success("文件删除成功");
+        return "文件删除成功";
     }
 }

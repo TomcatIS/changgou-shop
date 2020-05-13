@@ -10,6 +10,7 @@ com\dhcc\entity\TbBrand.class
 com\dhcc\enu\ProcessStatusEnum.class
 com\dhcc\dto\CommonResult.class
 com\dhcc\entity\UndoLog.class
+com\dhcc\util\IdWorker.class
 com\dhcc\entity\TbPref.class
 com\dhcc\entity\TbSpu.class
 com\dhcc\entity\TbAlbum.class

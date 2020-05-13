@@ -12,6 +12,12 @@ import java.util.List;
  */
 public interface TbBrandDao {
 
+
+    /**
+     * @description 根据分类id查询对应的品牌名称
+     */
+    List<String> listBrandsByCategoryId(Integer id);
+
     /**
      * 通过ID查询单条数据
      *

@@ -23,9 +23,13 @@ public enum ProcessStatusEnum {
 
     FILE_DOWNLOAD_ERROR(2004, "文件下载失败!"),
 
-    FILE_NOT_EXIST(2005, "文件不存在"),
+    FILE_NOT_EXIST(2005, "文件不存在！"),
 
     FILE_DELETE_ERROR(2006, "文件删除失败!"),
+
+    DATA_INSERT_ERROR(4001, "数据新增失败！"),
+
+    DATA_DELETE_ERROR(4002, "数据删除失败!"),
 
     FDFS_TRACKER_SERVER_CONNECT_FAIL(3001, "连接trackerServer失败!"),
 
