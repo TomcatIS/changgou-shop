@@ -8,7 +8,9 @@ import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -100,8 +102,8 @@ public class FastDfsUtil {
             byte[] bytes = storageClient.download_file(groupName, fileName);
             return new ByteArrayInputStream(bytes);
         } catch (Exception e) {
-            throw new BaseException(ProcessStatusEnum.FILE_DOWNLOAD_ERROR.getCode(),
-                    ProcessStatusEnum.FILE_DOWNLOAD_ERROR.getMessage());
+            throw new BaseException(ProcessStatusEnum.FILE_NOT_EXIST.getCode(),
+                    ProcessStatusEnum.FILE_NOT_EXIST.getMessage());
         }
     }
 

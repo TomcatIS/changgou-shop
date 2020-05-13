@@ -12,14 +12,19 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @description 文件上传控制层
@@ -32,6 +37,9 @@ import java.util.Date;
 @Api(tags = "文件操作API接口")
 public class FileController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * @description 文件上传
@@ -57,6 +65,10 @@ public class FileController {
             String uploadTime = simpleDateFormat.format(date);
             FastDfsFile fastDfsFile = new FastDfsFile(filename, bytes, ext, uploadTime);
             String[] uploadResults = FastDfsUtil.upload(fastDfsFile);
+            // 获取文件存储路径
+            String filePath = uploadResults[1];
+            // 将文件路径和原文件名存入redis
+            redisTemplate.opsForValue().set(filePath, filename);
             return CommonResult.success(uploadResults);
         } catch (IOException e) {
             throw new BaseException(ProcessStatusEnum.FILE_UPLOAD_ERROR.getCode(),
@@ -92,15 +104,21 @@ public class FileController {
             @ApiImplicitParam(name = "groupName", value = "组名", dataTypeClass = String.class),
             @ApiImplicitParam(name = "fileName", value = "文件名", dataTypeClass = String.class)
     })
-    public CommonResult<Object> download(@NotBlank(message = "文件所在组名不能为空") String groupName,
-                                             @NotBlank(message = "文件名不能为空") String fileName) {
-        String path = "E:\\a.jpg";
+    public String download(@NotBlank(message = "文件所在组名不能为空") String groupName,
+                                         @NotBlank(message = "文件名不能为空") String fileName, HttpServletResponse response) {
+        // 从redis获取原文件名
+        String originalName = (String)redisTemplate.opsForValue().get(fileName);
+        if (StringUtils.isEmpty(originalName)) {
+            originalName = UUID.randomUUID().toString();
+        }
         byte[] bytes = new byte[1024];
-        int len = 0;
+        int len;
         try (InputStream inputStream = FastDfsUtil.download(groupName, fileName);
              BufferedInputStream bis = new BufferedInputStream(inputStream);
-             OutputStream outputStream = new FileOutputStream(path);
+             OutputStream outputStream = response.getOutputStream();
              BufferedOutputStream bos = new BufferedOutputStream(outputStream)) {
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(originalName, "UTF-8"));
             while((len = bis.read(bytes)) != -1) {
                 bos.write(bytes, 0, len);
             }
@@ -109,7 +127,7 @@ public class FileController {
             throw new BaseException(ProcessStatusEnum.FILE_DOWNLOAD_ERROR.getCode(),
                     ProcessStatusEnum.FILE_DOWNLOAD_ERROR.getMessage());
         }
-        return CommonResult.success("文件下载成功");
+        return "文件下载成功";
     }
 
     /**
@@ -125,6 +143,13 @@ public class FileController {
     })
     public CommonResult<Object> delete(@NotBlank(message = "文件所在组名不能为空") String groupName,
                                        @NotBlank(message = "文件名不能为空") String fileName) {
+        try {
+            redisTemplate.delete(fileName);
+        } catch (Exception e) {
+            logger.error("删除文件的redis缓存失败");
+            throw new BaseException(ProcessStatusEnum.FILE_DELETE_ERROR.getCode(),
+                    ProcessStatusEnum.FILE_DELETE_ERROR.getMessage());
+        }
         FastDfsUtil.delete(groupName, fileName);
         return CommonResult.success("文件删除成功");
     }
