@@ -2,6 +2,7 @@ package com.dhcc.service.impl;
 
 import com.dhcc.entity.TbPara;
 import com.dhcc.dao.TbParaDao;
+import com.dhcc.exception.BaseException;
 import com.dhcc.service.TbParaService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,15 @@ import java.util.List;
 public class TbParaServiceImpl implements TbParaService {
     @Resource
     private TbParaDao tbParaDao;
+
+    @Override
+    public List<TbPara> listParamsByCategory(Integer id) {
+        List<TbPara> tbParas = this.tbParaDao.listParamsByCategory(id);
+        if (tbParas == null) {
+            throw new BaseException("该分类没有相应的参数!");
+        }
+        return tbParas;
+    }
 
     /**
      * 通过ID查询单条数据

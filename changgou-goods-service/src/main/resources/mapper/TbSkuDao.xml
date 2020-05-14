@@ -25,6 +25,17 @@
         <result property="version" column="version" jdbcType="INTEGER"/>
     </resultMap>
 
+    <sql id="Base_Clo">
+        id, sn, name, price, num, alert_num, image, images, weight, create_time, update_time, spu_id, category_id, category_name, brand_name, spec, sale_num, comment_num, status, version
+    </sql>
+
+    <!--根据spuId查询sku-->
+        <select id="listSkuBySpuId" parameterType="string" resultMap="TbSkuMap">
+            select <include refid="Base_Clo" />
+            from changgou.tb_sku
+            where spu_id={id}
+        </select>
+
     <!--查询单个-->
     <select id="queryById" resultMap="TbSkuMap">
         select

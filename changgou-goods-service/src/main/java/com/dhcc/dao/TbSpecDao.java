@@ -1,7 +1,10 @@
 package com.dhcc.dao;
 
+import com.dhcc.entity.TbPref;
 import com.dhcc.entity.TbSpec;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -10,7 +13,10 @@ import java.util.List;
  * @author makejava
  * @since 2020-05-07 23:00:42
  */
+@Repository
 public interface TbSpecDao {
+
+    List<TbPref> listPrecsByCategory(Integer id);
 
     /**
      * 通过ID查询单条数据

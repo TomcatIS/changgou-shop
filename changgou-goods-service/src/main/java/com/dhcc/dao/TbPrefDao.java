@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface TbPrefDao {
 
+
     /**
      * 通过ID查询单条数据
      *

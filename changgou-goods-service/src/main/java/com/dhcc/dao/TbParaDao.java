@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface TbParaDao {
 
+    List<TbPara> listParamsByCategory(Integer id);
+
     /**
      * 通过ID查询单条数据
      *

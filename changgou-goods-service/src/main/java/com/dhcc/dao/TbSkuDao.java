@@ -2,6 +2,8 @@ package com.dhcc.dao;
 
 import com.dhcc.entity.TbSku;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -10,7 +12,10 @@ import java.util.List;
  * @author makejava
  * @since 2020-05-07 23:00:42
  */
+@Repository
 public interface TbSkuDao {
+
+    List<TbSku> listSkuBySpuId(String id);
 
     /**
      * 通过ID查询单条数据

@@ -1,5 +1,6 @@
 package com.dhcc.service;
 
+import com.dhcc.entity.TbPref;
 import com.dhcc.entity.TbSpec;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * @since 2020-05-07 23:00:42
  */
 public interface TbSpecService {
+
+    List<TbPref> listPrecsByCategory(Integer id);
 
     /**
      * 通过ID查询单条数据

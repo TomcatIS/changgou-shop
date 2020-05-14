@@ -2,6 +2,8 @@ package com.dhcc.dao;
 
 import com.dhcc.entity.TbBrand;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ import java.util.List;
  * @author makejava
  * @since 2020-05-07 23:00:41
  */
+@Repository
 public interface TbBrandDao {
 
 

@@ -2,6 +2,7 @@ package com.dhcc.service.impl;
 
 import com.dhcc.entity.TbPref;
 import com.dhcc.dao.TbPrefDao;
+import com.dhcc.exception.BaseException;
 import com.dhcc.service.TbPrefService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class TbPrefServiceImpl implements TbPrefService {
     @Resource
     private TbPrefDao tbPrefDao;
+
 
     /**
      * 通过ID查询单条数据

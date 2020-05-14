@@ -1,7 +1,9 @@
 package com.dhcc.service.impl;
 
+import com.dhcc.entity.TbPref;
 import com.dhcc.entity.TbSpec;
 import com.dhcc.dao.TbSpecDao;
+import com.dhcc.exception.BaseException;
 import com.dhcc.service.TbSpecService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,18 @@ import java.util.List;
 public class TbSpecServiceImpl implements TbSpecService {
     @Resource
     private TbSpecDao tbSpecDao;
+
+    /**
+     * @param id 分类id
+     */
+    @Override
+    public List<TbPref> listPrecsByCategory(Integer id) {
+        List<TbPref> tbPrefs = this.tbSpecDao.listPrecsByCategory(id);
+        if (tbPrefs == null) {
+            throw new BaseException("该分类不存在相应的规格数据!");
+        }
+        return tbPrefs;
+    }
 
     /**
      * 通过ID查询单条数据

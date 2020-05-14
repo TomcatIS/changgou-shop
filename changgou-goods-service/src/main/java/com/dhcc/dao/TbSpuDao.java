@@ -12,6 +12,7 @@ import java.util.List;
  * @author makejava
  * @since 2020-05-07 23:00:42
  */
+@Repository
 public interface TbSpuDao {
 
     /**
