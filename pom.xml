@@ -15,6 +15,7 @@
         <module>changgou-nacos</module>
         <module>changgou-goods-service</module>
         <module>changgou-file-service</module>
+        <module>changgou-canal-service</module>
     </modules>
 
 

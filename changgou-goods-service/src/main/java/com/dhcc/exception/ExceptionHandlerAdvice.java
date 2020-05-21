@@ -52,7 +52,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public CommonResult<Object> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        logger.error("----------参数校验未通过----------" + ex.getMessage());
+        logger.error("[constraintViolationExceptionHandler]", ex);
         return CommonResult.error(ProcessStatusEnum.REQUEST_PARAM_INVALID.getCode(),
                 ex.getMessage());
     }
@@ -63,7 +63,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResult<Object> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         ObjectError objectError = ex.getBindingResult().getAllErrors().get(0);
-        logger.error("----------参数校验未通过----------" + objectError.getDefaultMessage());
+        logger.error("[methodArgumentNotValidExceptionHandler]" + ex);
         return CommonResult.error(ProcessStatusEnum.REQUEST_PARAM_INVALID.getCode(),
                 objectError.getDefaultMessage());
     }
@@ -74,7 +74,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(BaseException.class)
     public CommonResult<Object> runtimeExceptionHandler(BaseException ex) {
-        logger.error(ex.getMessage());
+        logger.debug("[runtimeExceptionHandler]", ex);
         return CommonResult.error(ex.getCode(),
                 ex.getMessage());
     }
@@ -83,8 +83,8 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
      * 其他异常处理
      */
     @ExceptionHandler(Exception.class)
-    public CommonResult<Object> otherExceptionHandler() {
-        logger.error("----------其他异常----------");
+    public CommonResult<Object> otherExceptionHandler(Exception ex) {
+        logger.debug("[otherExceptionHandler]", ex);
         return CommonResult.error(ProcessStatusEnum.OTHER_ERROR.getCode(), ProcessStatusEnum.OTHER_ERROR.getMessage());
     }
 
