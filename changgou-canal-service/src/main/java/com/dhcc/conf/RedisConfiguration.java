@@ -1,4 +1,4 @@
-package com.dhcc.config;
+package com.dhcc.conf;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
@@ -9,18 +9,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
- * @description redis序列化方式配置类
  * @author zhangqi
- * @date 2020/5/12
+ * @date 2020/5/22
  */
 @Configuration
 public class RedisConfiguration {
 
+
+
     @Bean
     public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object>  redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
-        // string方式序列化key
         redisTemplate.setKeySerializer(RedisSerializer.string());
         // json方式序列化value，jackson
         // redisTemplate.setValueSerializer(RedisSerializer.json());

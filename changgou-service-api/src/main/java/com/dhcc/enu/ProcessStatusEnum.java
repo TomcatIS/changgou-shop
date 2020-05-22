@@ -33,6 +33,8 @@ public enum ProcessStatusEnum {
 
     FDFS_TRACKER_SERVER_CONNECT_FAIL(3001, "连接trackerServer失败!"),
 
+    SERVICE_TRANSFER_DATA_ERROR(6001, "调用服务获取数据失败!"),
+
 
     RUNTIME_ERROR(5000, "运行时异常!"),
 
