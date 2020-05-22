@@ -13,4 +13,5 @@ com\dhcc\entity\UndoLog.class
 com\dhcc\util\IdWorker.class
 com\dhcc\entity\TbPref.class
 com\dhcc\entity\TbSpu.class
+com\dhcc\entity\TbAd.class
 com\dhcc\entity\TbAlbum.class

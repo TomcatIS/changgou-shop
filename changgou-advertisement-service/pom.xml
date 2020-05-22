@@ -8,8 +8,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <description>广告服务</description>
 
-    <artifactId>changgou-canal-service</artifactId>
+    <artifactId>changgou-advertisement-service</artifactId>
 
     <dependencies>
         <dependency>
@@ -22,11 +23,22 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!--开源canal，非原生cannal-->
+        <!--mybatis-->
         <dependency>
-            <groupId>com.xpand</groupId>
-            <artifactId>starter-canal</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!--alibaba druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
         <!--eureka-client-->
@@ -35,19 +47,12 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
-        <!--OpenFeign-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+        <!--changgou-service-api-->
         <dependency>
             <groupId>com.dhcc</groupId>
             <artifactId>changgou-service-api</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
-
     </dependencies>
-
 
 </project>

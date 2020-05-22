@@ -9,6 +9,17 @@
         <result property="seq" column="seq" jdbcType="INTEGER"/>
         <result property="templateId" column="template_id" jdbcType="INTEGER"/>
     </resultMap>
+    
+    <sql id="Base_Col">
+        id, name, options, seq, template_id
+    </sql>
+    
+    <!--根据分类查询参数-->
+    <select id="listParamsByCategory" parameterType="integer" resultMap="TbParaMap">
+        select <include refid="Base_Col" />
+        from tb_para a inner join tb_category b on a.template_id=b.template_id
+        where b.id=#{id}
+    </select>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TbParaMap">

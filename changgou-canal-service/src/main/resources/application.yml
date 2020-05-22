@@ -4,8 +4,6 @@ server:
 spring:
   application:
     name: changgou-canal-service
-  #rabbitmq:
-  #  host: 192.168.186.100
 
 canal:
   client:
@@ -15,4 +13,13 @@ canal:
         host: 192.168.186.100
         port: 11111
 
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
 
+  instance:
+    instance-id: canal-service-7800
+    prefer-ip-address: true

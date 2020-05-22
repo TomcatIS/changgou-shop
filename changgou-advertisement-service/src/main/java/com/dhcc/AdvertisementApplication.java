@@ -1,21 +1,19 @@
 package com.dhcc;
 
-import com.xpand.starter.canal.annotation.EnableCanalClient;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @author zhangqi
- * @date 2020/5/20
+ * @date 2020/5/21
  */
 @SpringBootApplication
-@EnableCanalClient
 @EnableEurekaClient
-@EnableFeignClients
-public class CanalApplication {
+@MapperScan(basePackages = "com.dhcc.dao")
+public class AdvertisementApplication {
     public static void main(String[] args) {
-        SpringApplication.run(CanalApplication.class, args);
+        SpringApplication.run(AdvertisementApplication.class, args);
     }
 }

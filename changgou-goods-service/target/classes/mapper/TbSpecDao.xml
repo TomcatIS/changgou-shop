@@ -10,6 +10,16 @@
         <result property="templateId" column="template_id" jdbcType="INTEGER"/>
     </resultMap>
 
+    <sql id="Base_Col">
+        id, name, options, seq, template_id
+    </sql>
+
+    <!--根据分类查询对应的规格数据-->
+    <select id="listPrecsByCategory" parameterType="integer" resultMap="TbSpecMap">
+        select <include refid="Base_Col" />
+        from tb_spec a inner join tb_category b on a.template_id=b.template_id
+        where b.id=#{id}
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="TbSpecMap">
         select

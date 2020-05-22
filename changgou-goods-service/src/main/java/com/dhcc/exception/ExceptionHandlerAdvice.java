@@ -14,6 +14,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -27,12 +28,14 @@ import javax.validation.ConstraintViolationException;
 public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @ResponseBody
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         // 如果返回类型为CommResult，返回true，不对返回值进行封装
         return !methodParameter.getGenericParameterType().equals(CommonResult.class);
     }
 
+    @ResponseBody
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -50,6 +53,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     /**
      * 普通参数校验不通过异常处理
      */
+    @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     public CommonResult<Object> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         logger.error("[constraintViolationExceptionHandler]", ex);
@@ -60,6 +64,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     /**
      * 对象类型的参数校验不通过异常处理
      */
+    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResult<Object> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         ObjectError objectError = ex.getBindingResult().getAllErrors().get(0);
@@ -72,6 +77,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     /**
      * 运行时异常处理器
      */
+    @ResponseBody
     @ExceptionHandler(BaseException.class)
     public CommonResult<Object> runtimeExceptionHandler(BaseException ex) {
         logger.debug("[runtimeExceptionHandler]", ex);
@@ -82,6 +88,7 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     /**
      * 其他异常处理
      */
+    @ResponseBody
     @ExceptionHandler(Exception.class)
     public CommonResult<Object> otherExceptionHandler(Exception ex) {
         logger.debug("[otherExceptionHandler]", ex);
