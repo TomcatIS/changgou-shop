@@ -33,7 +33,8 @@
         <select id="listSkuBySpuId" parameterType="string" resultMap="TbSkuMap">
             select <include refid="Base_Clo" />
             from changgou.tb_sku
-            where spu_id={id}
+            where status = 1 and spu_id = #{id}
+            limit
         </select>
 
     <!--查询单个-->
@@ -51,6 +52,7 @@
         from changgou.tb_sku
         limit #{offset}, #{limit}
     </select>
+
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TbSkuMap">

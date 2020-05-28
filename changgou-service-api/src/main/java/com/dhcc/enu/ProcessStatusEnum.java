@@ -35,6 +35,9 @@ public enum ProcessStatusEnum {
 
     SERVICE_TRANSFER_DATA_ERROR(6001, "调用服务获取数据失败!"),
 
+    ES_CREATE_INDEX_FAIL(7001, "创建ElasticSearch索引失败!"),
+
+    ES_CREATE_MAPPING_FAIL(7001, "创建ElasticSearch映射失败!"),
 
     RUNTIME_ERROR(5000, "运行时异常!"),
 

@@ -1,4 +1,4 @@
-package com.dhcc.service;
+package com.dhcc.feign;
 
 import com.dhcc.dto.CommonResult;
 import com.dhcc.entity.TbAd;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 @Component
 @FeignClient(value = "changgou-advertisement-service")
-public interface AdvertisementService {
+public interface AdvertisementFeign {
 
     @GetMapping("tbAd/selectOne/{id}")
     CommonResult<TbAd> selectOne(@PathVariable("id") Integer id);

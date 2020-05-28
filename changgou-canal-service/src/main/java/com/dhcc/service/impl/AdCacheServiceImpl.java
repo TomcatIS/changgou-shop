@@ -6,7 +6,7 @@ import com.dhcc.entity.TbAd;
 import com.dhcc.enu.ProcessStatusEnum;
 import com.dhcc.exception.BaseException;
 import com.dhcc.service.AdCacheService;
-import com.dhcc.service.AdvertisementService;
+import com.dhcc.feign.AdvertisementFeign;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AdCacheServiceImpl implements AdCacheService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    private AdvertisementService advertisementService;
+    private AdvertisementFeign advertisementFeign;
 
     private static final String prefix = "ad_";
 
@@ -59,7 +59,7 @@ public class AdCacheServiceImpl implements AdCacheService {
      * @description openfeign调用广告服务，获取Mysql中新增或修改的数据
      */
     public TbAd getData(String id) {
-        CommonResult<TbAd> commonResult = advertisementService.selectOne(Integer.parseInt(id));
+        CommonResult<TbAd> commonResult = advertisementFeign.selectOne(Integer.parseInt(id));
         TbAd data = commonResult.getData();
         if (data == null) {
             logger.info("----------获取数据失败----------");

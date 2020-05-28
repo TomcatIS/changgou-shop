@@ -13,7 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableCanalClient
 @EnableEurekaClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.dhcc.feign")
 public class CanalApplication {
     public static void main(String[] args) {
         SpringApplication.run(CanalApplication.class, args);

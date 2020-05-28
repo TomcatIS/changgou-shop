@@ -19,6 +19,11 @@ public class TbSkuServiceImpl implements TbSkuService {
     @Resource
     private TbSkuDao tbSkuDao;
 
+    @Override
+    public List<TbSku> listSkuBySpuId(String id) {
+        return this.tbSkuDao.listSkuBySpuId(id);
+    }
+
     /**
      * 通过ID查询单条数据
      *
@@ -75,5 +80,10 @@ public class TbSkuServiceImpl implements TbSkuService {
     @Override
     public boolean deleteById(String id) {
         return this.tbSkuDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<TbSku> queryAll(TbSku tbSku) {
+        return this.tbSkuDao.queryAll(tbSku);
     }
 }

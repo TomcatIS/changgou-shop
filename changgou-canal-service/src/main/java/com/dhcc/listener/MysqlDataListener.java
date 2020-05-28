@@ -1,10 +1,7 @@
 package com.dhcc.listener;
 
 import com.alibaba.otter.canal.protocol.CanalEntry;
-import com.dhcc.dto.CommonResult;
-import com.dhcc.entity.TbAd;
 import com.dhcc.service.AdCacheService;
-import com.dhcc.service.AdvertisementService;
 import com.xpand.starter.canal.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
