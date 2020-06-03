@@ -14,4 +14,12 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <!--fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

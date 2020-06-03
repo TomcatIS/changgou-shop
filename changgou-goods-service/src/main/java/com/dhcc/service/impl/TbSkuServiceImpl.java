@@ -1,11 +1,13 @@
 package com.dhcc.service.impl;
 
-import com.dhcc.entity.TbSku;
 import com.dhcc.dao.TbSkuDao;
+import com.dhcc.entity.TbSku;
 import com.dhcc.service.TbSkuService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ public class TbSkuServiceImpl implements TbSkuService {
      */
     @Override
     public TbSku queryById(String id) {
+        TbSku tbSku = this.tbSkuDao.queryById(id);
+        Timestamp createTime = tbSku.getCreateTime();
+        tbSku.setCreateTime(createTime);
         return this.tbSkuDao.queryById(id);
     }
 

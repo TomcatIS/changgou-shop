@@ -28,8 +28,8 @@ public class TbSkuController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("selectOne")
-    public TbSku selectOne(String id) {
+    @GetMapping("selectOne/{id}")
+    public TbSku selectOne(@PathVariable("id") String id) {
         return this.tbSkuService.queryById(id);
     }
 

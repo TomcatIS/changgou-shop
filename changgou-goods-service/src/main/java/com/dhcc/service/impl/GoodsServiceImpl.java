@@ -19,12 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author zhangqi
@@ -191,14 +189,7 @@ public class GoodsServiceImpl implements GoodsService {
         TbSpu spu = goods.getTbSpu();
         TbBrand tbBrand = tbBrandDao.queryById(spu.getBrandId());
         TbCategory tbCategory = tbCategoryDao.queryById(spu.getCategory3Id());
-        Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = simpleDateFormat.format(date);
-        try {
-            date = simpleDateFormat.parse(time);
-        } catch (ParseException e) {
-            throw new BaseException("日期格式转换错误");
-        }
+        Timestamp date = new Timestamp(System.currentTimeMillis());
         String spuName = spu.getName();
         for (TbSku sku : skuList) {
             sku.setId(String.valueOf(idWorker.nextId()));

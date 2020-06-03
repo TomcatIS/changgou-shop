@@ -84,6 +84,12 @@ public class SkuDO implements Serializable {
      */
     @Field(index = true, store = true, type = FieldType.Keyword)
     private String brandName;
+
+    /**
+     * 规格
+     */
+    private String spec;
+
     /**
      * 规格
      */
@@ -206,6 +212,14 @@ public class SkuDO implements Serializable {
 
     public void setBrandName(String brandName) {
         this.brandName = brandName;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
     }
 
     public Map<String, Object> getSpecMap() {

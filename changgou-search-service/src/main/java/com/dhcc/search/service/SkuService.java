@@ -1,5 +1,10 @@
 package com.dhcc.search.service;
 
+import com.dhcc.dto.CommonResult;
+import com.dhcc.search.dto.QueryDTO;
+
+import java.util.Map;
+
 /**
  * @author zhangqi
  * @date 2020/5/27
@@ -26,4 +31,6 @@ public interface SkuService {
      * 根据spuId删除es索引库中相关的sku数据
      */
     void delDataBySpuId(String spuId);
+
+    Map<String, Object> search(QueryDTO queryDTO);
 }
