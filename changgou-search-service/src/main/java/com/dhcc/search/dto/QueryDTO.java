@@ -12,14 +12,14 @@ import java.util.Map;
  */
 public class QueryDTO {
     /**
-     * 第几页
+     * 当前页
      */
-    private Integer page;
+    private Integer pageNum;
 
     /**
      * 每页数量
      */
-    private Integer size;
+    private Integer pageSize;
 
     /**
      * 搜索关键词
@@ -31,20 +31,24 @@ public class QueryDTO {
      */
     private Map<String, Sort.Direction> sortMap;
 
-    public Integer getPage() {
-        return page;
+    private String categoryName;
+
+    private String brandName;
+
+    public Integer getPageNum() {
+        return pageNum;
     }
 
-    public void setPage(Integer page) {
-        this.page = page;
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
     }
 
-    public Integer getSize() {
-        return size;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setSize(Integer size) {
-        this.size = size;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public String getKeyword() {
@@ -63,13 +67,19 @@ public class QueryDTO {
         this.sortMap = sortMap;
     }
 
-    @Override
-    public String toString() {
-        return "QueryDTO{" +
-                "page=" + page +
-                ", size=" + size +
-                ", keyword='" + keyword + '\'' +
-                ", sortMap=" + sortMap +
-                '}';
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 }

@@ -32,5 +32,5 @@ public interface SkuService {
      */
     void delDataBySpuId(String spuId);
 
-    Map<String, Object> search(QueryDTO queryDTO);
+    Map<String, Object> search(Map<String, String> searchMap);
 }

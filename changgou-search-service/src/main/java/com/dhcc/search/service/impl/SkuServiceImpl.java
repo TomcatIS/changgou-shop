@@ -6,14 +6,17 @@ import com.dhcc.dto.CommonResult;
 import com.dhcc.entity.TbSku;
 import com.dhcc.enu.ProcessStatusEnum;
 import com.dhcc.exception.BaseException;
+import com.dhcc.search.constant.SearchConstant;
 import com.dhcc.search.dto.QueryDTO;
 import com.dhcc.search.esdo.SkuDO;
 import com.dhcc.search.feign.SkuFeign;
 import com.dhcc.search.repository.SkuRepository;
 import com.dhcc.search.service.SkuService;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.slf4j.Logger;
@@ -97,8 +100,8 @@ public class SkuServiceImpl implements SkuService {
             Map<String, Object> specMap = JSON.parseObject(skuDO.getSpec(), Map.class);
             skuDO.setSpecMap(specMap);
         }
-        logger.info("----------sku信息导入索引库----------");
-        for (int i = 0; i < 10; i++){
+        logger.info("----------sku信息开始导入索引库----------");
+        for (int i = 150; i < 200; i++) {
             this.skuRepository.save(skuDOList.get(i));
         }
         //this.skuMapper.saveAll(skuDOList);
@@ -115,7 +118,6 @@ public class SkuServiceImpl implements SkuService {
 
     /**
      * 根据spuId删除es索引库中相关的sku数据
-     *
      */
     @Override
     public void delDataBySpuId(String spuId) {
@@ -125,39 +127,57 @@ public class SkuServiceImpl implements SkuService {
      * 商品搜索功能
      */
     @Override
-    public Map<String, Object> search(QueryDTO queryDTO) {
-        AggregatedPage<SkuDO> aggregatedPage = null;
-        List<String> categoryNameList = null;
-        List<String> brandNameList = null;
-        Map<String, Set<Object>> specMap = null;
-        if (queryDTO != null) {
-            // 构建根据关键词搜索条件
-            String keyword = queryDTO.getKeyword();
-            if (!StringUtils.isEmpty(keyword)) {
-                logger.info("从es库搜索sku信息");
-                try {
-                    String field1 = "categoryName";
-                    aggregatedPage = groupBy(keyword, field1);
-                    categoryNameList = getAggregatedFields(aggregatedPage, field1);
-                    String field2 = "brandName";
-                    AggregatedPage<SkuDO> aggregatedPage1 = groupBy(keyword, field2);
-                    brandNameList = getAggregatedFields(aggregatedPage1, field2);
-                    String field3 = "spec.keyword";
-                    AggregatedPage<SkuDO> aggregatedPage3 = groupBy(keyword, field3);
-                    List<String> specList = getAggregatedFields(aggregatedPage3, field3);
-                    // {颜色=[黑色, 蓝色, 紫色], 版本=[8GB+128GB, 3GB+32GB], 尺码=[L]}
-                    specMap = getSpecMap(specList);
-                } catch (Exception e) {
-                    throw new BaseException("搜索商品信息失败！");
-                }
+    public Map<String, Object> search(Map<String, String> searchMap) {
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        logger.info("从es库搜索sku信息");
+        // 根据关键词按sku名称(name)搜索
+        String keyword = searchMap.get("keyword");
+        if (!StringUtils.isEmpty(keyword)) {
+            queryBuilder.withQuery(QueryBuilders.queryStringQuery(keyword).field("name"));
+        }
+       // 根据分类分组
+        String value1 = searchMap.get(SearchConstant.FIELD_CATEGORY_NAME);
+        if (StringUtils.isEmpty(value1)) {
+            addAggregation(queryBuilder, SearchConstant.FIELD_CATEGORY_NAME);
+        } else {
+            boolQueryBuilder.must(QueryBuilders.termQuery(SearchConstant.FIELD_CATEGORY_NAME, value1));
+        }
+        // 根据品牌分组
+        String value2 = searchMap.get(SearchConstant.FIELD_BRAND_NAME);
+        if (StringUtils.isEmpty(value2)) {
+            addAggregation(queryBuilder, "brandName");
+        } else {
+            boolQueryBuilder.must(QueryBuilders.termQuery(SearchConstant.FIELD_BRAND_NAME, value2));
+        }
+        // 根据规格分组
+         boolean flag = true;
+        for (Map.Entry<String, String> entry : searchMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (key.startsWith("spec_")) {
+                System.out.println(key.substring(5));
+                boolQueryBuilder.must(QueryBuilders.termQuery("specMap." + key.substring(5) + ".keyword", value));
+                flag = false;
             }
         }
-        Map<String, Object> map = new HashMap<>(8);
-        if (aggregatedPage != null) {
-            map.put("totalPages", aggregatedPage.getTotalPages());
-            map.put("totalElements", aggregatedPage.getTotalElements());
-            //map.put("skuList", aggregatedPage.getContent());
+        if (flag) {
+            addAggregation(queryBuilder, SearchConstant.FIELD_SPEC);
         }
+
+
+
+        queryBuilder.withQuery(boolQueryBuilder);
+        AggregatedPage<SkuDO> aggregatedPage = elasticsearchRestTemplate.queryForPage(queryBuilder.build(), SkuDO.class);
+        List<String> categoryNameList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_CATEGORY_NAME);
+        List<String> brandNameList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_BRAND_NAME);
+        List<String> specList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_SPEC);
+        // {颜色=[黑色, 蓝色, 紫色], 版本=[8GB+128GB, 3GB+32GB], 尺码=[L]}
+        Map<String, Set<Object>> specMap = getSpecMap(specList);
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("totalPages", aggregatedPage.getTotalPages());
+        map.put("totalElements", aggregatedPage.getTotalElements());
+        map.put("skuList", aggregatedPage.getContent());
         map.put("categoryNameList", categoryNameList);
         map.put("brandNameList", brandNameList);
         map.put("specMap", specMap);
@@ -165,25 +185,28 @@ public class SkuServiceImpl implements SkuService {
         return map;
     }
 
-    /**
-     * @description 分组查询
-     * @param keyword 搜索关键词：“华为”
-     * @param field 对哪个域进行分组：“品牌”
-     */
-    private AggregatedPage<SkuDO> groupBy(String keyword, String field) {
-        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
-        queryBuilder.withQuery(QueryBuilders.queryStringQuery(keyword).field("name"));
-        queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field));
-        return elasticsearchRestTemplate.queryForPage(queryBuilder.build(), SkuDO.class);
+    private void addAggregation(NativeSearchQueryBuilder queryBuilder, String field) {
+        queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field).size(SearchConstant.ES_PAGE_SIZE));
     }
 
+
     /**
-     * @description 获取分组查询的域
      * @param field 获取哪个域的分组结果
      * @return list {"手机”，“电子产品”}  {“华为”，“荣耀”}
+     * @description 获取分组查询的域
      */
     private List<String> getAggregatedFields(AggregatedPage<SkuDO> aggregatedPage, String field) {
-        ParsedStringTerms terms = aggregatedPage.getAggregations().get(field);
+        if (aggregatedPage == null) {
+            return null;
+        }
+        Aggregations aggregations = aggregatedPage.getAggregations();
+        if (aggregations == null) {
+            return null;
+        }
+        ParsedStringTerms terms = aggregations.get(field);
+        if (terms == null) {
+            return null;
+        }
         List<String> list = new ArrayList<>();
         for (Terms.Bucket bucket : terms.getBuckets()) {
             list.add(bucket.getKeyAsString());
@@ -192,14 +215,17 @@ public class SkuServiceImpl implements SkuService {
     }
 
     /**
-     * @description 将规格转换成map
      * @param specList 规则字符串集合
+     * @description 将规格转换成map
      */
     private Map<String, Set<Object>> getSpecMap(List<String> specList) {
+        if (specList == null) {
+            return null;
+        }
         Map<String, Set<Object>> setMap = new HashMap<>(16);
         for (String str : specList) {
             JSONObject jsonObject = JSONObject.parseObject(str);
-            Map<String,Object> map = jsonObject;
+            Map<String, Object> map = jsonObject;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
