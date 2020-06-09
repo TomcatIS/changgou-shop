@@ -25,7 +25,7 @@ import javax.validation.ConstraintViolationException;
  * @author zhangqi
  * @date 2020-05-07 11:29:46
  */
-//@RestControllerAdvice(basePackages = "com.dhcc.search.controller")
+@RestControllerAdvice(basePackages = "com.dhcc.search.controller")
 public class ExceptionHandlerAdvice implements ResponseBodyAdvice<Object> {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

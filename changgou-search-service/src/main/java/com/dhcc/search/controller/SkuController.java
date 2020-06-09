@@ -44,7 +44,7 @@ public class SkuController {
 
     /**
      * 根据条件搜索sku
-     * @param queryDTO 封装搜索条件的实体类
+     * @param searchMap 封装搜索条件
      */
     @ApiOperation(value = "商品查询")
     @GetMapping("sku/search")
@@ -52,7 +52,6 @@ public class SkuController {
         if (searchMap == null) {
             return null;
         }
-        System.out.println(searchMap.toString());
         return this.skuService.search(searchMap);
     }
 }

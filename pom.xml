@@ -18,6 +18,7 @@
         <module>changgou-canal-service</module>
         <module>changgou-advertisement-service</module>
         <module>changgou-search-service</module>
+        <module>changgou-search-page</module>
     </modules>
 
     <properties>
