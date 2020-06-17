@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RestClientConfig {
-    private static final String hostName = "192.168.186.100";
+    private static final String hostName = "47.98.236.132";
     private static final Integer port = 9200;
     private static final String protocol = "http";
 

@@ -29,11 +29,13 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +113,7 @@ public class SkuServiceImpl implements SkuService {
             skuDO.setSpecMap(specMap);
         }
         logger.info("----------sku信息开始导入索引库----------");
-        for (int i = 150; i < 200; i++) {
+        for (int i = 100; i < 200; i++) {
             this.skuRepository.save(skuDOList.get(i));
         }
         //this.skuMapper.saveAll(skuDOList);
@@ -145,8 +147,8 @@ public class SkuServiceImpl implements SkuService {
         // 根据关键词按sku名称(name)搜索
         String keyword = searchMap.get("keyword");
         if (!StringUtils.isEmpty(keyword)) {
-            boolQueryBuilder.must(QueryBuilders.matchQuery("name", keyword).operator(Operator.AND));
-            //boolQueryBuilder.should(QueryBuilders.termQuery("name", keyword));
+            //boolQueryBuilder.must(QueryBuilders.matchQuery("name", keyword).operator(Operator.AND));
+            boolQueryBuilder.must(QueryBuilders.termQuery("name", keyword));
         }
        // 分类搜索
         String categoryName = searchMap.get(SearchConstant.FIELD_CATEGORY_NAME);
@@ -163,18 +165,14 @@ public class SkuServiceImpl implements SkuService {
             addAggregation(queryBuilder, SearchConstant.FIELD_BRAND_NAME);
         }
         // 规格搜索
-        boolean flag = true;
         for (Map.Entry<String, String> entry : searchMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             if (key.startsWith("spec_")) {
                 boolQueryBuilder.filter(QueryBuilders.termQuery("specMap." + key.substring(5) + ".keyword", value));
-                flag = false;
             }
         }
-        if (flag) {
-            addAggregation(queryBuilder, SearchConstant.FIELD_SPEC);
-        }
+        addAggregation(queryBuilder, SearchConstant.FIELD_SPEC);
         // 价格搜索
         String price = searchMap.get(SearchConstant.FIELD_PRICE);
         if (!StringUtils.isEmpty(price)) {
@@ -195,9 +193,9 @@ public class SkuServiceImpl implements SkuService {
         }
 
         // 分页搜索
-        /*String pageNum = searchMap.get("pageNum");
+        String pageNum = searchMap.get("pageNum");
         int i = convertPageNum(pageNum);
-        queryBuilder.withPageable(PageRequest.of(i - 1, SearchConstant.PAGE_SIZE));*/
+        queryBuilder.withPageable(PageRequest.of(i - 1, SearchConstant.PAGE_SIZE));
 
         // 高亮显示
         // 高亮配置
@@ -241,11 +239,16 @@ public class SkuServiceImpl implements SkuService {
         // {颜色=[黑色, 蓝色, 紫色], 版本=[8GB+128GB, 3GB+32GB], 尺码=[L]}
         Map<String, Set<Object>> specMap = getSpecMap(specList);
         map.put("categoryNameList", categoryNameList);
-        map.put("totalPages", aggregatedPage.getTotalPages());
-        map.put("totalElements", aggregatedPage.getTotalElements());
         map.put("skuList", aggregatedPage.getContent());
         map.put("brandNameList", brandNameList);
         map.put("specMap", specMap);
+        // 分页参数
+        NativeSearchQuery nativeSearchQuery = queryBuilder.build();
+        Pageable pageable = nativeSearchQuery.getPageable();
+        map.put("pageNum", pageable.getPageNumber());
+        map.put("totalPages", aggregatedPage.getTotalPages());
+        map.put("totalElements", aggregatedPage.getTotalElements());
+        map.put("pageSize", SearchConstant.PAGE_SIZE);
         logger.info("搜索sku信息成功！");
         return map;
     }

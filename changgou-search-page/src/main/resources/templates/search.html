@@ -8,6 +8,8 @@
     <link rel="icon" href="assets/img/favicon.ico">
     <link href='/css/material.css' rel="stylesheet">
     <link href="/css/vuetify.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
     <script src="/js/vue/vue.js"></script>
     <script src="/js/vue/vuetify.js"></script>
     <script src="/js/axios.min.js"></script>
@@ -99,21 +101,26 @@
     <div class="py-container">
 
         <div class="bread">
-            <!--面包屑-->
             <ul class="fl sui-breadcrumb">
                 <li><span>全部结果:</span></li>
-                <li ><a href="#">手机</a></li>
-                <li ><span>手机通讯</span></li>
             </ul>
             <!--已选择过滤项-->
             <ul class="tags-choose">
-                <li class="tag">
-                    品牌:<span style="color: red">apple</span>
-                    <i class="sui-icon icon-tb-close"></i>
+                <li class="tag" th:if="${#maps.containsKey(searchMap, 'categoryName')}">
+                    分类:<span style="color: red">[[${searchMap.categoryName}]]</span>
+                    <a th:href="@{${#strings.replace(url, 'categoryName=' + searchMap.categoryName, '')}}"><i class="sui-icon icon-tb-close"></i></a>
                 </li>
-                <li class="tag">
-                    内存:<span style="color: red">4G</span>
-                    <i class="sui-icon icon-tb-close"></i>
+                <li class="tag" th:if="${#maps.containsKey(searchMap, 'brandName')}">
+                    品牌:<span style="color: red">[[${searchMap.brandName}]]</span>
+                    <a th:href="@{${#strings.replace(url, 'brandName=' + searchMap.brandName, '')}}"><i class="sui-icon icon-tb-close"></i></a>
+                </li>
+                <li class="tag" th:each="spec : ${searchMap}" th:if="${#strings.startsWith(spec.key, 'spec_')}" >
+                    [[${#strings.substring(spec.key, 5)}]]:<span style="color: red">[[${spec.value}]]</span>
+                    <a th:href="@{${#strings.replace(url, spec.key + '=' + spec.value, '')}}"><i class="sui-icon icon-tb-close"></i></a>
+                </li>
+                <li class="tag" th:if="${#maps.containsKey(searchMap, 'price')}">
+                    价格:<span style="color: red">[[${searchMap.price}]]</span>
+                    <a th:href="@{${#strings.replace(url, 'price=' + searchMap.price, '')}}"><i class="sui-icon icon-tb-close"></i></a>
                 </li>
             </ul>
             <div class="clearfix"></div>
@@ -125,7 +132,7 @@
                 <div class="fl value">
                     <ul class="type-list">
                         <li th:each="categoryName : ${result.categoryNameList}">
-                            <a>[[${categoryName}]]</a>
+                            <a th:href="@{${url + 'categoryName=' + categoryName}}">[[${categoryName}]]</a>
                         </li>
                     </ul>
                 </div>
@@ -135,46 +142,45 @@
                 <div class="fl key brand">品牌</div>
                 <div class="value logos">
                     <ul class="logo-list">
-                        <li th:each="brandName : ${result.brandNameList}" th:text="${brandName}"></li>
+                        <li th:each="brandName : ${result.brandNameList}" >
+                            <a th:href="@{${url + 'brandName=' + brandName}}">[[${brandName}]]</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="fl ext">
                     <a href="javascript:void(0);" class="sui-btn">多选</a>
                 </div>
             </div>
-            <div class="type-wrap" th:each="map : ${result.specMap}" th:unless="${#maps.containsKey(searchMap, 'spec_' + map.key)}">
-                <div class="fl key" th:text="${map.key}"></div>
+            <div class="type-wrap" th:each="spec : ${result.specMap}" th:unless="${#maps.containsKey(searchMap, 'spec_' + spec.key)}">
+                <div class="fl key" th:text="${spec.key}"></div>
                 <div class="fl value">
                     <ul class="type-list">
-                        <li th:each="data : ${map.value}">
-                            <a th:text="${data}"></a>
+                        <li th:each="data : ${spec.value}">
+                            <a th:text="${data}" th:href="@{${url + 'spec_' + spec.key + '=' + data}}"></a>
                         </li>
                     </ul>
                 </div>
                 <div class="fl ext"></div>
             </div>
 
-            <div class="type-wrap">
+            <div class="type-wrap" th:unless="${#maps.containsKey(searchMap, 'price')}">
                 <div class="fl key">价格</div>
                 <div class="fl value">
                     <ul class="type-list">
                         <li>
-                            <a>0-500元</a>
+                            <a th:href="@{${url + 'price=0-500元'}}">0-500元</a>
                         </li>
                         <li>
-                            <a>500-1000元</a>
+                            <a th:href="@{${url + 'price=500-2000元'}}">500-2000元</a>
                         </li>
                         <li>
-                            <a>1000-1500元</a>
+                            <a th:href="@{${url + 'price=2000-5000元'}}">2000-5000元</a>
                         </li>
                         <li>
-                            <a>1500-2000元</a>
+                            <a th:href="@{${url + 'price=5000-10000元'}}">5000-10000元</a>
                         </li>
                         <li>
-                            <a>2000-3000元 </a>
-                        </li>
-                        <li>
-                            <a>3000元以上</a>
+                            <a th:href="@{${url + 'price=10000元'}}">10000元以上</a>
                         </li>
                     </ul>
                 </div>
@@ -208,11 +214,11 @@
                             <a href="#">评价</a>
                         </li>
                         <li>
-                            <a href="#">价格</a>
+                            <a th:href="@{${url}}"  th:onclick="sortPrice()" th:id="price">价格↑↓</a>
                         </li>
                     </ul>
                     <div class="top-pagination">
-                        <span>共 <i style="color: #222;">7600+</i> 商品</span>
+                        <span>共 <i style="color: #222;" >[[${result.totalElements}]]</i> 商品</span>
                         <span><i style="color: red;">2</i>/123</span>
                         <a class="btn-arrow" href="#" style="display: inline-block">&lt;</a>
                         <a class="btn-arrow" href="#" style="display: inline-block">&gt;</a>
@@ -224,7 +230,7 @@
                     <li class="yui3-u-1-5" th:each="item : ${result.skuList}">
                         <div class="list-wrap">
                             <div class="p-img">
-                                <a href="item.html" target="_blank"><img src="/img/_/mobile01.png" height="200" th:src="${item.image}"/></a>
+                                <a href="item.html" target="_blank"><img  height="200" th:src="${item.image}"/></a>
                             </div>
                             <div class="clearfix"></div>
                             <div class="price">
@@ -234,7 +240,8 @@
                                 </strong>
                             </div>
                             <div class="attr">
-                                <em th:utext="${#strings.abbreviate(item.name, 80)}"></em>
+                                <!--<em th:utext="${#strings.abbreviate(item.name, 59)}"></em>-->
+                                <em th:utext="${#strings.substring(item.name, 0, 65)}"></em>
                             </div>
                             <div class="cu">
                                 <em><span>促</span>满一件可参加超值换购</em>
@@ -255,33 +262,23 @@
             <div class="fr">
                 <div class="sui-pagination pagination-large">
                     <ul>
-                        <li class="prev disabled">
-                            <a href="#">«上一页</a>
+                        <li class="prev">
+                            <a th:href="@{${url}(pageNum=${page.upper})}">«上一页</a>
                         </li>
-                        <li class="active">
-                            <a href="#">1</a>
+                        <li th:each="i:${#numbers.sequence(page.lpage,page.rpage)}" th:class="${i == page.currentpage} ? 'active' : '' ">
+                            <a th:href="@{${url}(pageNum=${i})}" th:text="${i}"></a>
                         </li>
-                        <li>
-                            <a href="#">2</a>
-                        </li>
-                        <li>
-                            <a href="#">3</a>
-                        </li>
-                        <li>
-                            <a href="#">4</a>
-                        </li>
-                        <li>
-                            <a href="#">5</a>
-                        </li>
-                        <li class="dotted"><span>...</span></li>
                         <li class="next">
-                            <a href="#">下一页»</a>
+                            <a th:href="@{${url}(pageNum=${page.next})}">下一页»</a>
                         </li>
                     </ul>
-                    <div><span>共10页&nbsp;</span><span>
-      到第
-      <input type="text" class="page-num">
-      页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>
+                    <div>
+                        <span>共<i th:text="${page.last}"></i>页&nbsp;</span>
+                        <span>共<i th:text="${page.total}"></i>个商品&nbsp;</span>
+                        <!--到第
+                        <input type="text" class="page-num">
+                        页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>-->
+                    </div>
                 </div>
             </div>
         </div>
@@ -387,8 +384,9 @@
 </script>
 <!-- 底部栏位 -->
 <!--页面底部，由js动态加载-->
-<div class="clearfix footer"></div>
-<script type="text/javascript">$(".footer").load("foot.html");</script>
+<!--<div class="clearfix footer"></div>
+<script type="text/javascript">$(".footer").load("foot.html");</script>-->
+<div th:replace="foot :: #foot"></div>
 <!--页面底部END-->
 
 </body >
@@ -410,7 +408,6 @@
     </div>
 </script>
 <!--侧栏面板结束-->
-<script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript">
     $(function () {
         $("#service").hover(function () {
@@ -426,6 +423,24 @@
 
     })
 </script>
+<!--价格排序-->
+<script>
+    function sortPrice() {
+        let url = $("#price").attr("href");
+        if (url.indexOf("sortRule=ASC") < 0 && url.indexOf("sortRule=DESC") < 0) {
+            $("#price").attr("href", url + "sortRule=ASC&sortField=price");
+            return;
+        }
+        if (url.indexOf("sortRule=ASC") >= 0) {
+            let newUrl = url.replace("sortRule=ASC", "sortRule=DESC");
+            $("#price").attr("href", newUrl);
+            return;
+        }
+        let newUrl = url.replace("sortRule=DESC", "sortRule=ASC");
+        $("#price").attr("href", newUrl);
+    }
+</script>
+
 <script type="text/javascript" src="/js/model/cartModel.js"></script>
 <script type="text/javascript" src="/js/czFunction.js"></script>
 <script type="text/javascript" src="/js/plugins/jquery.easing/jquery.easing.min.js"></script>

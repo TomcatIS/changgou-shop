@@ -13,7 +13,7 @@ public final class SearchConstant {
     /**
      * 每页条数
      */
-    public static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 3;
 
     public static final String FIELD_CATEGORY_NAME = "categoryName";
 

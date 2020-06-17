@@ -19,12 +19,12 @@
                 </div>
                 <div class='yui3-u Center searchArea'>
                     <div class='search'>
-                        <form  class='sui-form form-inline' action="/search/page/sku">
+                        <form  class='sui-form form-inline' action="/search/page/listSkuDetails">
                             <!--searchAutoComplete-->
                             <div class='input-append'>
                                 <input type='text' id='autocomplete' th:name="keyword" th:value="${#maps.containsKey(searchMap, 'keyword') ? searchMap.keyword : ''}"
                                        class='input-error input-xxlarge'/>
-                                <input  class='sui-btn btn-xlarge btn-danger' th:type="submit" >搜索</input>
+                                <button  class='sui-btn btn-xlarge btn-danger' th:type="submit" >搜索</button>
                             </div>
                         </form>
                     </div>
