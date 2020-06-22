@@ -142,8 +142,8 @@
                 <div class="fl key brand">品牌</div>
                 <div class="value logos">
                     <ul class="logo-list">
-                        <li th:each="brandName : ${result.brandNameList}" >
-                            <a th:href="@{${url + 'brandName=' + brandName}}">[[${brandName}]]</a>
+                        <li th:each="brand : ${brandMap}" >
+                            <a th:href="@{${url + 'brandName=' + brand.key}}"><img th:src="${brand.value}"/></a>
                         </li>
                     </ul>
                 </div>
@@ -241,7 +241,8 @@
                             </div>
                             <div class="attr">
                                 <!--<em th:utext="${#strings.abbreviate(item.name, 59)}"></em>-->
-                                <em th:utext="${#strings.substring(item.name, 0, 65)}"></em>
+                                <!--<em th:utext="${#strings.abbreviate(item.name, 50)}"></em>-->
+                                <a th:utext="${#strings.indexOf(item.name, '</em>')>=0 ? #strings.abbreviate(item.name, 50) : #strings.abbreviate(item.name, 20)}" href="#"></a>
                             </div>
                             <div class="cu">
                                 <em><span>促</span>满一件可参加超值换购</em>

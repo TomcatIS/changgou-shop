@@ -24,6 +24,8 @@ public interface TbBrandService {
      */
     TbBrand queryById(Integer id);
 
+    List<TbBrand> queryAll(TbBrand tbBrand);
+
     /**
      * 查询多条数据
      *

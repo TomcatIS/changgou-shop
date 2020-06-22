@@ -39,6 +39,8 @@ public enum ProcessStatusEnum {
 
     ES_CREATE_MAPPING_FAIL(7001, "创建ElasticSearch映射失败!"),
 
+    REDIS_INSERT_ERROR(8001, "数据存入redis失败！"),
+
     RUNTIME_ERROR(5000, "运行时异常!"),
 
     OTHER_ERROR(10000, "其他错误!");

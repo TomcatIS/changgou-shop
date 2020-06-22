@@ -72,4 +72,14 @@ public class TbBrand implements Serializable {
         this.seq = seq;
     }
 
+    @Override
+    public String toString() {
+        return "TbBrand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", letter='" + letter + '\'' +
+                ", seq=" + seq +
+                '}';
+    }
 }

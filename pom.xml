@@ -19,6 +19,7 @@
         <module>changgou-advertisement-service</module>
         <module>changgou-search-service</module>
         <module>changgou-search-page</module>
+        <module>changgou-gateway-service</module>
     </modules>
 
     <properties>

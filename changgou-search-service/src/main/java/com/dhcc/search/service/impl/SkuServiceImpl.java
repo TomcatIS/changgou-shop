@@ -235,6 +235,7 @@ public class SkuServiceImpl implements SkuService {
         });
         List<String> categoryNameList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_CATEGORY_NAME);
         List<String> brandNameList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_BRAND_NAME);
+        //
         List<String> specList = getAggregatedFields(aggregatedPage, SearchConstant.FIELD_SPEC);
         // {颜色=[黑色, 蓝色, 紫色], 版本=[8GB+128GB, 3GB+32GB], 尺码=[L]}
         Map<String, Set<Object>> specMap = getSpecMap(specList);
@@ -254,8 +255,8 @@ public class SkuServiceImpl implements SkuService {
     }
 
     private void addAggregation(NativeSearchQueryBuilder queryBuilder, String field) {
-        //queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field).size(SearchConstant.ES_SIZE));
-        queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field));
+        queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field).size(SearchConstant.ES_SIZE));
+        //queryBuilder.addAggregation(AggregationBuilders.terms(field).field(field));
     }
 
 

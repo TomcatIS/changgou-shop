@@ -1,11 +1,8 @@
 package com.dhcc.search.controller;
 
 import com.dhcc.dto.CommonResult;
-import com.dhcc.search.dto.QueryDTO;
 import com.dhcc.search.service.SkuService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +46,11 @@ public class SkuController {
     @ApiOperation(value = "商品查询")
     @GetMapping("sku/search")
     public Map<String, Object> search(@RequestParam Map<String, String> searchMap) {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (searchMap == null) {
             return null;
         }

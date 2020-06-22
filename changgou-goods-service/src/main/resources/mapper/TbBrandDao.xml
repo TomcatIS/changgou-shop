@@ -17,6 +17,7 @@
         where b.category_id=#{id}
     </select>
 
+
     <!--查询单个-->
     <select id="queryById" resultMap="TbBrandMap">
         select

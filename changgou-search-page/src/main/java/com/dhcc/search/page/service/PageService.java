@@ -17,4 +17,6 @@ public interface PageService {
      * @return 分页信息
      */
     Page<Object>  pagination(Map<String, Object> map);
+
+    Map<String, String>  queryBrandImg(Map<String, Object> map);
 }

@@ -1,3 +1,4 @@
+
 server:
   port: 7400
 
@@ -10,6 +11,7 @@ spring:
         reactive:
           socket-timeout: 60000
           connection-timeout: 60000
+
 
 
 eureka:
@@ -28,3 +30,8 @@ ribbon:
   ReadTimeout: 60000
   #指的是建立连接所用的时间，适用于网络状况正常的情况下，两端连接所用的时间
   ConnectTimeout: 10000
+
+feign:
+  hystrix:
+    # 开启服务熔断
+    enabled: true

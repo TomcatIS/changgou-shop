@@ -43,6 +43,11 @@ public class TbBrandServiceImpl implements TbBrandService {
         return this.tbBrandDao.queryById(id);
     }
 
+    @Override
+    public List<TbBrand> queryAll(TbBrand tbBrand) {
+        return this.tbBrandDao.queryAll(tbBrand);
+    }
+
     /**
      * 查询多条数据
      *

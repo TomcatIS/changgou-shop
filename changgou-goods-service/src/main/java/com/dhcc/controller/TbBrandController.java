@@ -1,8 +1,6 @@
 package com.dhcc.controller;
 
-import com.dhcc.dto.CommonResult;
 import com.dhcc.entity.TbBrand;
-import com.dhcc.exception.BaseException;
 import com.dhcc.service.TbBrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -36,9 +34,15 @@ public class TbBrandController {
      */
     @ApiOperation(value = "查询品牌名称")
     @ApiImplicitParam(name = "id", value = "分类id", required = true)
-    @GetMapping("list/brandsName/{id}")
+    @GetMapping("/list/brandsName/{id}")
     public List<String> listBrandsByCategoryId(@PathVariable("id") @NotNull(message = "分类id不能为空") Integer id) {
         return this.tbBrandService.listBrandsByCategoryId(id);
+    }
+
+    @GetMapping("/queryAll")
+    public List<TbBrand> queryAll(TbBrand tbBrand) {
+        List<TbBrand> tbBrands = this.tbBrandService.queryAll(tbBrand);
+        return tbBrands;
     }
 
     /**

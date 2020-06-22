@@ -78,6 +78,12 @@
             <artifactId>changgou-service-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <!--Hystrix -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
     </dependencies>
 
 
